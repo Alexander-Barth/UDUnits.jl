@@ -50,7 +50,7 @@ The function `areconvertible` returns `true` if two units are convertible:
 Create a converter object and then apply the object to some data.
 
 ```julia
-conv = converter(m_per_s,km_per_h)
+conv = Converter(m_per_s,km_per_h)
 speed_in_m_per_s = 100.
 speed_in_km_per_h = conv(speed_in_m_per_s)
 ```

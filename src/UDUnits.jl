@@ -33,7 +33,18 @@ System() = System(ccall((:ut_read_xml,libudunits2),Ptr{Void},(Ptr{Void},),C_NULL
 
 Unit(system::System,unit::AbstractString) = Unit(ccall((:ut_parse ,libudunits2),Ptr{Void},(Ptr{Void},Ptr{UInt8},Cint),system.ptr,unit,UT_ENC))
 areconvertible(unit1::Unit,unit2::Unit) = ccall((:ut_are_convertible ,libudunits2),Cint,(Ptr{Void},Ptr{Void}),unit1.ptr,unit2.ptr) == 1
-converter(unit1::Unit,unit2::Unit) = Converter(ccall((:ut_get_converter ,libudunits2),Ptr{Void},(Ptr{Void},Ptr{Void}),unit1.ptr,unit2.ptr))
+
+
+"""
+    converter = Converter(from_unit::Unit,to_unit::Unit)
+
+Creates converter function of numeric values in the from unit to equivalent 
+values in the to unit.
+"""
+
+Converter(from_unit::Unit,to_unit::Unit) =
+    Converter(ccall((:ut_get_converter ,libudunits2),
+                    Ptr{Void},(Ptr{Void},Ptr{Void}),from_unit.ptr,to_unit.ptr))
 
 
 convert(conv::Converter,v::Float64) = ccall((:cv_convert_double,libudunits2),Float64,(Ptr{Void},Float64),conv.ptr,v)
@@ -74,6 +85,6 @@ log(base::Number,unit::Unit) = Unit(ccall((:ut_log,libudunits2),Ptr{Void},(Float
 log(unit::Unit) = log(e,unit)
 log10(unit::Unit) = log(10,unit)
 
-export System, Unit, converter, areconvertible, name, symbol
+export System, Unit, Converter, areconvertible, name, symbol
 
 end # module

@@ -13,15 +13,15 @@ unit_kg = UDUnits.Unit(system,"kg")
 
 @test UDUnits.areconvertible(unit_m,unit_cm)
 
-conv = UDUnits.converter(unit_cm,unit_m)
+conv = UDUnits.Converter(unit_cm,unit_m)
 @test UDUnits.convert(conv,100.) ≈ 1.
 
 unit_m3 = unit_m + 3
-conv = UDUnits.converter(unit_m,unit_m3)
+conv = UDUnits.Converter(unit_m,unit_m3)
 @test UDUnits.convert(conv,100.) ≈ 97.
 
 unit_mm3 = unit_m - 3.
-conv = UDUnits.converter(unit_m,unit_mm3)
+conv = UDUnits.Converter(unit_m,unit_mm3)
 @test UDUnits.convert(conv,100.) ≈ 103.
 
 
@@ -30,13 +30,13 @@ unit_km_per_h = unit_km/unit_h
 unit_Hz = 1./unit_s
 
 @test UDUnits.areconvertible(unit_m_per_s,unit_km_per_h)
-conv = UDUnits.converter(unit_m_per_s,unit_km_per_h)
+conv = UDUnits.Converter(unit_m_per_s,unit_km_per_h)
 
 @test UDUnits.convert(conv,100.) ≈ 360.
 @test conv(100.) ≈ 360.
 
 unit_W2 = unit_kg * unit_m^2/(unit_s^3)
-conv = UDUnits.converter(unit_W2,unit_W)
+conv = UDUnits.Converter(unit_W2,unit_W)
 @test UDUnits.convert(conv,100.) ≈ 100.
 
 
