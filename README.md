@@ -4,14 +4,19 @@
 
 [![Coverage Status](https://coveralls.io/repos/Alexander-Barth/UDUnits.jl/badge.svg?branch=master&service=github)](https://coveralls.io/github/Alexander-Barth/UDUnits.jl?branch=master)
 
+<!-- udunits is currently not available for Windows in conda -->
+
+<!--
 [![Build Status Windows](https://ci.appveyor.com/api/projects/status/github/Alexander-Barth/UDUnits.jl?branch=master&svg=true)](https://ci.appveyor.com/project/Alexander-Barth/udunits-jl)
+-->
 
 [![codecov.io](http://codecov.io/github/Alexander-Barth/UDUnits.jl/coverage.svg?branch=master)](http://codecov.io/github/Alexander-Barth/UDUnits.jl?branch=master)
 
 ## Loading the module
 
 Loading the module `UDUnits` and initialize the unit system.
-```
+
+```julia
 using UDUnits
 sys = System()
 ```
