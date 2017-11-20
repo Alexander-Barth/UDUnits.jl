@@ -3,7 +3,7 @@ using Conda
 
 
 @BinDeps.setup
-libudunits2 = library_dependency("libudunits2", aliases = ["udunits"])
+libudunits2 = library_dependency("libudunits2", aliases = ["udunits2","udunits"])
 
 #Conda.add_channel("conda-forge")
 provides(Conda.Manager, "udunits2", libudunits2)
