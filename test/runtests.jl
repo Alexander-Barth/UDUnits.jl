@@ -1,15 +1,15 @@
-using UDUnits
+import UDUnits
 using Base.Test
 
-system = ut_read_xml()
+system = UDUnits.ut_read_xml()
 
-unit_m = parse("m")
-unit_cm = parse("cm")
+unit_m = UDUnits.parse(system,"m")
+unit_cm = UDUnits.parse(system,"cm")
 
 
-@test areconvertible(unit_m,unit_cm)
+@test UDUnits.areconvertible(unit_m,unit_cm)
 
-conv = converter(unit_cm,unit_m)
+conv = UDUnits.converter(unit_cm,unit_m)
 
-@test convert(conv,100.) ≈ 1.
+@test UDUnits.convert(conv,100.) ≈ 1.
 
