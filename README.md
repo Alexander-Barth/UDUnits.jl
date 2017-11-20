@@ -14,7 +14,7 @@
 
 ## Loading the module
 
-Loading the module `UDUnits` and initialize the unit system.
+Loade the module `UDUnits` and initialize the unit system.
 
 ```julia
 using UDUnits
@@ -23,7 +23,7 @@ sys = System()
 
 ## Parsing units
 
-Parse a unit the units `m` and `cm` using either the symbol or the full name.
+The units `m` and `cm` can be parsed using either their symbol or their full name.
 
 ```julia
 m = Unit(sys,"meter")
