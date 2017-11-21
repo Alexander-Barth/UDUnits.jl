@@ -33,11 +33,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "index.html#UDUnits.Converter-Tuple{UDUnits.Unit,UDUnits.Unit}",
+    "location": "index.html#UDUnits.format",
     "page": "UDUnits.jl",
-    "title": "UDUnits.Converter",
-    "category": "Method",
-    "text": "converter = Converter(from_unit::Unit,to_unit::Unit)\n\nCreates a converter function of numeric values in the from_unit to equivalent values in the to_unit.\n\nusing UDUnits\nsys = System()\nconv = Converter(sys[\"m/s\"],sys[\"km/h\"])\nspeed_in_m_per_s = 100.\nspeed_in_km_per_h = conv(speed_in_m_per_s)\n\n\n\n"
+    "title": "UDUnits.format",
+    "category": "Function",
+    "text": "s = format(unit::Unit; names = false, definition = false)\n\nFormat the unit unit as a string. If names is true, then definition uses the unit names (e.g. meter) instead of symbols (e.g. m). If definition is true, then the unit should be expressed in terms of basic units (m²·kg·s⁻³ instead of W).\n\n\n\n"
 },
 
 {
@@ -49,11 +49,27 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "index.html#UDUnits.Converter-Tuple{UDUnits.Unit,UDUnits.Unit}",
+    "page": "UDUnits.jl",
+    "title": "UDUnits.Converter",
+    "category": "Method",
+    "text": "converter = Converter(from_unit::Unit,to_unit::Unit)\n\nCreates a converter function of numeric values in the from_unit to equivalent values in the to_unit.\n\nusing UDUnits\nsys = System()\nconv = Converter(sys[\"m/s\"],sys[\"km/h\"])\nspeed_in_m_per_s = 100.\nspeed_in_km_per_h = conv(speed_in_m_per_s)\n\n\n\n"
+},
+
+{
+    "location": "index.html#UDUnits.expression",
+    "page": "UDUnits.jl",
+    "title": "UDUnits.expression",
+    "category": "Function",
+    "text": "s = expression(conv::Converter; variable = \"x\")\n\nReturn a string representation of the converter conv using the variable variable.\n\n\n\n"
+},
+
+{
     "location": "index.html#UDUnits.jl-1",
     "page": "UDUnits.jl",
     "title": "UDUnits.jl",
     "category": "section",
-    "text": "Documentation for UDUnits.jlSystem\nsymbol\nname\nConverter(from_unit::Unit,to_unit::Unit)\nareconvertible(from_unit::Unit,to_unit::Unit)"
+    "text": "Documentation for UDUnits.jlSystem\nsymbol\nname\nformat\nareconvertible(from_unit::Unit,to_unit::Unit)\nConverter(from_unit::Unit,to_unit::Unit)\nexpression"
 },
 
 ]}
