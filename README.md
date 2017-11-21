@@ -14,32 +14,38 @@
 
 ## Loading the module
 
-Loade the module `UDUnits` and initialize the unit system.
+Load the module `UDUnits` and initialize the unit system `sys` which correspond to the SI unit system.
 
 ```julia
 using UDUnits
 sys = System()
 ```
 
-## Parsing units
+## Units
 
-The units `m` and `cm` can be parsed using either their symbol or their full name.
+The unit objects can be created for `m` and `cm` using either their symbol or their full name by indexing the `sys` object as if `sys` is a dictionary.
 
 ```julia
-m = Unit(sys,"meter")
-cm = Unit(sys,"cm")
+m = sys["meter"]
+cm = sys["cm"]
+```
+
+Similarily to dictionary, the function `haskey` is defined to determine if a unit is a valid:
+
+```julia
+haskey(sys,"μm") # returns true
 ```
 
 # Derived units
 
-Units can be derived using the usual mathemical operators. Of course, `m_per_s` could have been also create simply by using `Unit(sys,"m/s")`.
+Units can be derived using the usual mathemical operators. Of course, `m_per_s` could have been also create simply by using `sys["m/s"]`.
 
 
 ```julia
-m = Unit(sys,"m")
-km = Unit(sys,"km")
-s = Unit(sys,"s")
-h = Unit(sys,"h")
+m = sys["m"]
+km = sys["km"]
+s = sys["s"]
+h = sys["h"]
 m_per_s = m/s
 km_per_h = km/h
 ```

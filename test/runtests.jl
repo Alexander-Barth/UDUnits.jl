@@ -10,8 +10,19 @@ unit_s = UDUnits.Unit(system,"s")
 unit_h = UDUnits.Unit(system,"h")
 unit_W = UDUnits.Unit(system,"W")
 unit_kg = UDUnits.Unit(system,"kg")
+unit_kg = system["kg"]
+unit_μm = system["μm"]
+
+@test haskey(system,"kg")
+@test haskey(system,"μm")
+
+
+@test_throws ErrorException UDUnits.Unit(system,"badname")
+
 
 @test UDUnits.areconvertible(unit_m,unit_cm)
+@test_throws ErrorException UDUnits.Converter(unit_m,unit_kg)
+
 
 conv = UDUnits.Converter(unit_cm,unit_m)
 @test UDUnits.convert(conv,100.) ≈ 1.
@@ -56,3 +67,9 @@ unit_s2 = (unit_s * unit_s) ^(1//2)
 
 @test UDUnits.name(unit_m) == "meter"
 @test UDUnits.symbol(unit_m) == "m"
+
+# test clean-up
+unit_m = 0
+system = 0
+conv = 0
+gc()
