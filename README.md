@@ -4,6 +4,8 @@
 
 [![Coverage Status](https://coveralls.io/repos/Alexander-Barth/UDUnits.jl/badge.svg?branch=master&service=github)](https://coveralls.io/github/Alexander-Barth/UDUnits.jl?branch=master)
 
+[![codecov.io](http://codecov.io/github/Alexander-Barth/UDUnits.jl/coverage.svg?branch=master)](http://codecov.io/github/Alexander-Barth/UDUnits.jl?branch=master)
+
 <!-- udunits is currently not available for Windows in conda -->
 
 <!--
@@ -13,11 +15,19 @@
 [![documentation stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://alexander-barth.github.io/UDUnits.jl/stable/)
 [![documentation latest](https://img.shields.io/badge/docs-latest-blue.svg)](https://alexander-barth.github.io/UDUnits.jl/latest/)
 
-[![codecov.io](http://codecov.io/github/Alexander-Barth/UDUnits.jl/coverage.svg?branch=master)](http://codecov.io/github/Alexander-Barth/UDUnits.jl?branch=master)
+
+## Installation
+
+Inside the Julia shell, you can download and install the package by issuing:
+
+```julia
+Pkg.clone("https://github.com/Alexander-Barth/UDUnits.jl")
+Pkg.build("UDUnits")
+```
 
 ## Loading the module
 
-Load the module `UDUnits` and initialize the unit system `sys` which correspond to the SI unit system.
+The first step is to load the module `UDUnits` and to initialize the unit system `sys` which correspond to the SI unit system.
 
 ```julia
 using UDUnits
@@ -61,7 +71,7 @@ The function `areconvertible` returns `true` if two units are convertible:
 @show areconvertible(m_per_s,km_per_h)
 ```
 
-Create a converter object and then apply the object to some data.
+To convert units, create a converter object and then apply the object to some data.
 
 ```julia
 conv = Converter(m_per_s,km_per_h)
@@ -69,7 +79,7 @@ speed_in_m_per_s = 100.
 speed_in_km_per_h = conv(speed_in_m_per_s)
 ```
 
-For an array as input:
+The dot syntax can be used for an array as input:
 
 ```julia
 speed_in_m_per_s = [100.,110.,120.]

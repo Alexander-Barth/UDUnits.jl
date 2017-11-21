@@ -115,11 +115,13 @@ _free_converter(converter::Converter) = ccall((:cv_free,libudunits2),Ptr{Void},(
 """
     converter = Converter(from_unit::Unit,to_unit::Unit)
 
-Creates converter function of numeric values in the from unit to equivalent
-values in the to unit.
+Creates a converter function of numeric values in the `from_unit` to equivalent
+values in the `to_unit`.
 
 ```julia
-conv = Converter(m_per_s,km_per_h)
+using UDUnits
+sys = System()
+conv = Converter(sys["m/s"],sys["km/h"])
 speed_in_m_per_s = 100.
 speed_in_km_per_h = conv(speed_in_m_per_s)
 ```
@@ -133,9 +135,8 @@ function Converter(from_unit::Unit,to_unit::Unit)
     ptr = ccall((:ut_get_converter ,libudunits2),
                 Ptr{Void},(Ptr{Void},Ptr{Void}),from_unit.ptr,to_unit.ptr)
 
-    if ptr == C_NULL
-        error("UDUnits cannot convert from $(from_unit) to $(to_unit)")
-    end
+    # ptr should not be null since the units are convertible
+    @assert ptr != C_NULL
 
     converter = Converter(ptr)
 
