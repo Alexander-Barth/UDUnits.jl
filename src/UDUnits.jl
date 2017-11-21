@@ -1,5 +1,5 @@
 module UDUnits
-import Base:+, -, *, / , ^, inv, log, log10, √
+import Base:+, -, *, / , ^, inv, log, log10, √, show
 
 # package code goes here
 const depfile = joinpath(dirname(@__FILE__), "..", "deps", "deps.jl")
@@ -10,9 +10,15 @@ else
 end
 
 
-# default encoding is UTF8
-const UT_ENC = 2
+const UT_encoding_t = Cint
+const UT_UTF8 = 2
+const UT_NAMES = 4
+const UT_DEFINITION = 8
 
+const buffer_size = 100
+
+# default encoding is UTF8
+const UT_ENC = UT_UTF8
 
 # Unit System
 
@@ -50,7 +56,9 @@ type Unit
 end
 
 _free_unit(unit::Unit) = ccall((:ut_free,libudunits2),Ptr{Void},(Ptr{Void},),unit.ptr)
-_ut_parse(system::System,unit::AbstractString) = ccall((:ut_parse ,libudunits2),Ptr{Void},(Ptr{Void},Ptr{UInt8},Cint),system.ptr,unit,UT_ENC)
+_ut_parse(system::System,unit::AbstractString) =
+    ccall((:ut_parse ,libudunits2),
+          Ptr{Void},(Ptr{Void},Ptr{UInt8},UT_encoding_t),system.ptr,unit,UT_ENC)
 
 function Unit(system::System,unit::AbstractString)
     ptr = _ut_parse(system,unit)
@@ -62,6 +70,43 @@ function Unit(system::System,unit::AbstractString)
     return unit
 end
 
+"""
+    s = format(unit::Unit; names = false, definition = false)
+
+Format the unit `unit` as a string. If names is true, then definition uses
+the unit names (e.g. meter) instead of symbols (e.g. m). If definition is
+true, then the unit should be expressed in terms of basic units (m²·kg·s⁻³
+instead of W).
+
+"""
+function format(unit::Unit; names = false, definition = false)
+    buffer = Vector{UInt8}(buffer_size)
+    opts = UT_ENC
+
+    if names
+        opts |= UT_NAMES
+    end
+
+    if definition
+        opts |= UT_DEFINITION
+    end
+
+    len = ccall((:ut_format,libudunits2),Cint,(Ptr{Void},Ptr{UInt8},Csize_t,Cint),unit.ptr,buffer,length(buffer),opts)
+    if len == -1
+        return "unknown"
+    else
+        return unsafe_string(pointer(buffer))
+    end
+end
+
+Base.string(unit::Unit) = format(unit)
+
+function Base.show(io::IO,unit::Unit)
+    print(io,"<Unit: ")
+    print_with_color(:blue, io, format(unit))
+    print(io,">\n")
+end
+
 Base.haskey(system::System,unit::AbstractString) = _ut_parse(system,unit) != C_NULL
 Base.getindex(system::System,unit::AbstractString) = Unit(system,unit)
 
@@ -71,7 +116,8 @@ Base.getindex(system::System,unit::AbstractString) = Unit(system,unit)
 Returns the symbol of `unit`.
 """
 
-symbol(unit::Unit) = unsafe_string(ccall((:ut_get_symbol,libudunits2),Ptr{UInt8},(Ptr{Void},Cint),unit.ptr,UT_ENC))
+symbol(unit::Unit) =
+    unsafe_string(ccall((:ut_get_symbol,libudunits2),Ptr{UInt8},(Ptr{Void},UT_encoding_t),unit.ptr,UT_ENC))
 
 """
     s = name(unit::Unit)
@@ -79,7 +125,8 @@ symbol(unit::Unit) = unsafe_string(ccall((:ut_get_symbol,libudunits2),Ptr{UInt8}
 Returns the name of `unit`.
 """
 
-name(unit::Unit) = unsafe_string(ccall((:ut_get_name,libudunits2),Ptr{UInt8},(Ptr{Void},Cint),unit.ptr,UT_ENC))
+name(unit::Unit) =
+    unsafe_string(ccall((:ut_get_name,libudunits2),Ptr{UInt8},(Ptr{Void},UT_encoding_t),unit.ptr,UT_ENC))
 
 
 +(unit::Unit,offset::Number) = Unit(ccall((:ut_offset,libudunits2),Ptr{Void},(Ptr{Void},Float64),unit.ptr,offset))
@@ -156,6 +203,27 @@ areconvertible(unit1::Unit,unit2::Unit) = ccall((:ut_are_convertible ,libudunits
 convert(conv::Converter,v::Float64) = ccall((:cv_convert_double,libudunits2),Float64,(Ptr{Void},Float64),conv.ptr,v)
 (conv::Converter)(v::Number) = convert(conv,v)
 
-export System, Unit, Converter, areconvertible, name, symbol
+"""
+    s = expression(conv::Converter; variable = "x")
+Return a string representation of the converter `conv` using the
+variable `variable`.
+"""
+
+function expression(conv::Converter; variable = "x")
+    buffer = Vector{UInt8}(buffer_size)
+    len = ccall((:cv_get_expression,libudunits2),Cint,(Ptr{Void},Ptr{UInt8},Csize_t,Ptr{UInt8}),conv.ptr,buffer,length(buffer),variable)
+
+    @assert len != -1
+
+    return unsafe_string(pointer(buffer))
+end
+
+function Base.show(io::IO,conv::Converter)
+    print(io,"<Converter: ")
+    print_with_color(:blue, io, expression(conv))
+    print(io,">\n")
+end
+
+export System, Unit, Converter, areconvertible, name, symbol, expression, format
 
 end # module

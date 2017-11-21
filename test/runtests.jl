@@ -23,9 +23,20 @@ unit_μm = system["μm"]
 @test UDUnits.areconvertible(unit_m,unit_cm)
 @test_throws ErrorException UDUnits.Converter(unit_m,unit_kg)
 
+buf = IOBuffer()
+show(buf,unit_km)
+@test startswith(String(take!(buf)),"<Unit:")
 
+
+# converter
 conv = UDUnits.Converter(unit_cm,unit_m)
 @test UDUnits.convert(conv,100.) ≈ 1.
+@test UDUnits.expression(conv) == "0.01*x"
+
+buf = IOBuffer()
+show(buf,conv)
+@test startswith(String(take!(buf)),"<Converter:")
+
 
 unit_m3 = unit_m + 3
 conv = UDUnits.Converter(unit_m,unit_m3)
@@ -67,6 +78,19 @@ unit_s2 = (unit_s * unit_s) ^(1//2)
 
 @test UDUnits.name(unit_m) == "meter"
 @test UDUnits.symbol(unit_m) == "m"
+
+# Format strings
+unit_J_per_s = UDUnits.Unit(system,"J/s")
+
+@test UDUnits.format(unit_J_per_s) == "W"
+@test UDUnits.string(unit_J_per_s) == "W"
+
+@test UDUnits.format(unit_J_per_s; names = true) == "watt"
+@test UDUnits.format(unit_J_per_s; definition = true) == "m²·kg·s⁻³"
+@test UDUnits.format(unit_J_per_s; definition = true, names = true) ==
+    "meter²·kilogram·second⁻³"
+
+
 
 # test clean-up
 unit_m = 0

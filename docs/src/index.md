@@ -6,6 +6,8 @@ Documentation for UDUnits.jl
 System
 symbol
 name
-Converter(from_unit::Unit,to_unit::Unit)
+format
 areconvertible(from_unit::Unit,to_unit::Unit)
+Converter(from_unit::Unit,to_unit::Unit)
+expression
 ```
