@@ -10,6 +10,9 @@
 [![Build Status Windows](https://ci.appveyor.com/api/projects/status/github/Alexander-Barth/UDUnits.jl?branch=master&svg=true)](https://ci.appveyor.com/project/Alexander-Barth/udunits-jl)
 -->
 
+[![documentation stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://alexander-barth.github.io/UDUnits.jl/stable/)
+[![documentation latest](https://img.shields.io/badge/docs-latest-blue.svg)](https://alexander-barth.github.io/UDUnits.jl/latest/)
+
 [![codecov.io](http://codecov.io/github/Alexander-Barth/UDUnits.jl/coverage.svg?branch=master)](http://codecov.io/github/Alexander-Barth/UDUnits.jl?branch=master)
 
 ## Loading the module
@@ -30,7 +33,7 @@ m = sys["meter"]
 cm = sys["cm"]
 ```
 
-Similarily to dictionary, the function `haskey` is defined to determine if a unit is a valid:
+Similarily to a dictionary, the function `haskey` is defined to determine if a unit is a valid:
 
 ```julia
 haskey(sys,"μm") # returns true
@@ -72,6 +75,10 @@ For an array as input:
 speed_in_m_per_s = [100.,110.,120.]
 speed_in_km_per_h = conv.(speed_in_m_per_s)
 ```
+
+## Windows
+
+`UDUnits.jl` is not tested on Windows because Conda and WinRPM do not have a build of the udunits2 library.
 
 
 ## Resources
