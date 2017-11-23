@@ -88,7 +88,19 @@ speed_in_km_per_h = conv.(speed_in_m_per_s)
 
 ## Windows
 
-`UDUnits.jl` is not tested on Windows because Conda and WinRPM do not have a build of the udunits2 library.
+I did not succeed to install `UDUnits.jl` on Windows using the package manager Conda.
+One way to make it work on Windows is to bypass Conda:
+
+* extract udunits2.dll and all xml files from https://anaconda.org/conda-forge/udunits2/2.2.23/download/win-64/udunits2-2.2.23-vc9_1.tar.bz2
+* expat.dll from https://anaconda.org/conda-forge/expat/2.1.0/download/win-64/expat-2.1.0-vc9_1.tar.bz2
+* place them in the `deps` folder of UDUnits
+* before any call to "using UDUnits" or "import UDUnits", set the following variable:
+
+```julia
+ENV["UDUNITS2_XML_PATH"] = joinpath(Pkg.dir("UDUnits"),"deps","udunits2.xml")
+```
+
+
 
 
 ## Resources
