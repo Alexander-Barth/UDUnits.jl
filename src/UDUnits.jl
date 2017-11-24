@@ -1,5 +1,5 @@
 module UDUnits
-import Base:+, -, *, / , ^, inv, log, log10, √, show
+import Base:+, -, *, / , ^, inv, log, log10, √, show, unsafe_convert
 
 # package code goes here
 const depfile = joinpath(dirname(@__FILE__), "..", "deps", "deps.jl")
@@ -26,8 +26,8 @@ type System
     ptr :: Ptr{Void}
 end
 
-
-_free_system(system::System) = ccall((:ut_free_system,libudunits2),Ptr{Void},(Ptr{Void},),system.ptr)
+unsafe_convert(::Type{Ptr{Void}}, sys::System) = sys.ptr
+_free_system(system::System) = ccall((:ut_free_system,libudunits2),Ptr{Void},(Ptr{Void},),system)
 
 """
     system = System()
@@ -55,10 +55,13 @@ type Unit
     ptr :: Ptr{Void}
 end
 
-_free_unit(unit::Unit) = ccall((:ut_free,libudunits2),Ptr{Void},(Ptr{Void},),unit.ptr)
+
+unsafe_convert(t::Type{Ptr{Void}}, unit::Unit) = unit.ptr
+
+_free_unit(unit::Unit) = ccall((:ut_free,libudunits2),Ptr{Void},(Ptr{Void},),unit)
 _ut_parse(system::System,unit::AbstractString) =
     ccall((:ut_parse ,libudunits2),
-          Ptr{Void},(Ptr{Void},Ptr{UInt8},UT_encoding_t),system.ptr,unit,UT_ENC)
+          Ptr{Void},(Ptr{Void},Ptr{UInt8},UT_encoding_t),system,unit,UT_ENC)
 
 function Unit(system::System,unit::AbstractString)
     ptr = _ut_parse(system,unit)
@@ -91,7 +94,7 @@ function format(unit::Unit; names = false, definition = false)
         opts |= UT_DEFINITION
     end
 
-    len = ccall((:ut_format,libudunits2),Cint,(Ptr{Void},Ptr{UInt8},Csize_t,Cint),unit.ptr,buffer,length(buffer),opts)
+    len = ccall((:ut_format,libudunits2),Cint,(Ptr{Void},Ptr{UInt8},Csize_t,Cint),unit,buffer,length(buffer),opts)
     if len == -1
         return "unknown"
     else
@@ -117,7 +120,7 @@ Returns the symbol of `unit`.
 """
 
 symbol(unit::Unit) =
-    unsafe_string(ccall((:ut_get_symbol,libudunits2),Ptr{UInt8},(Ptr{Void},UT_encoding_t),unit.ptr,UT_ENC))
+    unsafe_string(ccall((:ut_get_symbol,libudunits2),Ptr{UInt8},(Ptr{Void},UT_encoding_t),unit,UT_ENC))
 
 """
     s = name(unit::Unit)
@@ -126,25 +129,25 @@ Returns the name of `unit`.
 """
 
 name(unit::Unit) =
-    unsafe_string(ccall((:ut_get_name,libudunits2),Ptr{UInt8},(Ptr{Void},UT_encoding_t),unit.ptr,UT_ENC))
+    unsafe_string(ccall((:ut_get_name,libudunits2),Ptr{UInt8},(Ptr{Void},UT_encoding_t),unit,UT_ENC))
 
 
-+(unit::Unit,offset::Number) = Unit(ccall((:ut_offset,libudunits2),Ptr{Void},(Ptr{Void},Float64),unit.ptr,offset))
++(unit::Unit,offset::Number) = Unit(ccall((:ut_offset,libudunits2),Ptr{Void},(Ptr{Void},Float64),unit,offset))
 -(unit::Unit,offset::Number) = unit+(-offset)
-*(factor::Number,unit::Unit) = Unit(ccall((:ut_scale,libudunits2),Ptr{Void},(Float64,Ptr{Void}),factor,unit.ptr))
-*(unit1::Unit,unit2::Unit) = Unit(ccall((:ut_multiply,libudunits2),Ptr{Void},(Ptr{Void},Ptr{Void}),unit1.ptr,unit2.ptr))
-inv(unit::Unit) = Unit(ccall((:ut_invert,libudunits2),Ptr{Void},(Ptr{Void},),unit.ptr))
-/(unit1::Unit,unit2::Unit) = Unit(ccall((:ut_divide,libudunits2),Ptr{Void},(Ptr{Void},Ptr{Void}),unit1.ptr,unit2.ptr))
+*(factor::Number,unit::Unit) = Unit(ccall((:ut_scale,libudunits2),Ptr{Void},(Float64,Ptr{Void}),factor,unit))
+*(unit1::Unit,unit2::Unit) = Unit(ccall((:ut_multiply,libudunits2),Ptr{Void},(Ptr{Void},Ptr{Void}),unit1,unit2))
+inv(unit::Unit) = Unit(ccall((:ut_invert,libudunits2),Ptr{Void},(Ptr{Void},),unit))
+/(unit1::Unit,unit2::Unit) = Unit(ccall((:ut_divide,libudunits2),Ptr{Void},(Ptr{Void},Ptr{Void}),unit1,unit2))
 /(factor::Number,unit::Unit) = factor * inv(unit)
 
-root(unit::Unit,power::Integer) = Unit(ccall((:ut_root,libudunits2),Ptr{Void},(Ptr{Void},Cint),unit.ptr,power))
+root(unit::Unit,power::Integer) = Unit(ccall((:ut_root,libudunits2),Ptr{Void},(Ptr{Void},Cint),unit,power))
 
-^(unit::Unit,power::Integer) = Unit(ccall((:ut_raise,libudunits2),Ptr{Void},(Ptr{Void},Cint),unit.ptr,power))
+^(unit::Unit,power::Integer) = Unit(ccall((:ut_raise,libudunits2),Ptr{Void},(Ptr{Void},Cint),unit,power))
 ^(unit::Unit,power::Rational{<:Integer}) = root(unit^numerator(power),denominator(power))
 
 √(unit::Unit) = root(unit,2)
 
-log(base::Number,unit::Unit) = Unit(ccall((:ut_log,libudunits2),Ptr{Void},(Float64,Ptr{Void}),base,unit.ptr))
+log(base::Number,unit::Unit) = Unit(ccall((:ut_log,libudunits2),Ptr{Void},(Float64,Ptr{Void}),base,unit))
 log(unit::Unit) = log(e,unit)
 log10(unit::Unit) = log(10,unit)
 
@@ -155,8 +158,8 @@ type Converter
     ptr :: Ptr{Void}
 end
 
-_free_converter(converter::Converter) = ccall((:cv_free,libudunits2),Ptr{Void},(Ptr{Void},),converter.ptr)
-
+unsafe_convert(t::Type{Ptr{Void}}, conv::Converter) = conv.ptr
+_free_converter(converter::Converter) = ccall((:cv_free,libudunits2),Ptr{Void},(Ptr{Void},),converter)
 
 
 """
@@ -180,7 +183,7 @@ function Converter(from_unit::Unit,to_unit::Unit)
     end
 
     ptr = ccall((:ut_get_converter ,libudunits2),
-                Ptr{Void},(Ptr{Void},Ptr{Void}),from_unit.ptr,to_unit.ptr)
+                Ptr{Void},(Ptr{Void},Ptr{Void}),from_unit,to_unit)
 
     # ptr should not be null since the units are convertible
     @assert ptr != C_NULL
@@ -197,10 +200,10 @@ end
 Return true if `from_unit` and `to_unit` are convertible, otherwise false.
 """
 
-areconvertible(unit1::Unit,unit2::Unit) = ccall((:ut_are_convertible ,libudunits2),Cint,(Ptr{Void},Ptr{Void}),unit1.ptr,unit2.ptr) == 1
+areconvertible(unit1::Unit,unit2::Unit) = ccall((:ut_are_convertible ,libudunits2),Cint,(Ptr{Void},Ptr{Void}),unit1,unit2) == 1
 
 
-convert(conv::Converter,v::Float64) = ccall((:cv_convert_double,libudunits2),Float64,(Ptr{Void},Float64),conv.ptr,v)
+convert(conv::Converter,v::Float64) = ccall((:cv_convert_double,libudunits2),Float64,(Ptr{Void},Float64),conv,v)
 (conv::Converter)(v::Number) = convert(conv,v)
 
 """
@@ -211,7 +214,7 @@ variable `variable`.
 
 function expression(conv::Converter; variable = "x")
     buffer = Vector{UInt8}(buffer_size)
-    len = ccall((:cv_get_expression,libudunits2),Cint,(Ptr{Void},Ptr{UInt8},Csize_t,Ptr{UInt8}),conv.ptr,buffer,length(buffer),variable)
+    len = ccall((:cv_get_expression,libudunits2),Cint,(Ptr{Void},Ptr{UInt8},Csize_t,Ptr{UInt8}),conv,buffer,length(buffer),variable)
 
     @assert len != -1
 
