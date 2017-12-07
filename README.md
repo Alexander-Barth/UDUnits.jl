@@ -19,6 +19,14 @@
 Inside the Julia shell, you can download and install the package by issuing:
 
 ```julia
+Pkg.add("UDUnits")
+```
+
+### Latest development version
+
+If you want to try the latest development version, you can do this with the following commands:
+
+```julia
 Pkg.clone("https://github.com/Alexander-Barth/UDUnits.jl")
 Pkg.build("UDUnits")
 ```
