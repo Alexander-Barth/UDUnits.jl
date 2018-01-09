@@ -49,10 +49,10 @@ m = sys["meter"]
 cm = sys["cm"]
 ```
 
-Similarily to a dictionary, the function `haskey` is defined to determine if a unit is a valid:
+Similarily to a dictionary, the function `haskey` is defined to determine if a unit is valid:
 
 ```julia
-haskey(sys,"μm") # returns true
+haskey(sys,"μm") # returns true since UDUnits knows about micrometers
 ```
 
 # Derived units
