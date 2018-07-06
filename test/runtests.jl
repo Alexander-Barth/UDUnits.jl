@@ -1,5 +1,10 @@
 import UDUnits
-using Base.Test
+
+if VERSION >= v"0.7.0-beta.0"
+    using Test
+else
+    using Base.Test
+end
 
 system = UDUnits.System()
 
@@ -49,7 +54,7 @@ conv = UDUnits.Converter(unit_m,unit_mm3)
 
 unit_m_per_s = unit_m/unit_s
 unit_km_per_h = unit_km/unit_h
-unit_Hz = 1./unit_s
+unit_Hz = 1/unit_s
 
 @test UDUnits.areconvertible(unit_m_per_s,unit_km_per_h)
 conv = UDUnits.Converter(unit_m_per_s,unit_km_per_h)
@@ -96,4 +101,9 @@ unit_J_per_s = UDUnits.Unit(system,"J/s")
 unit_m = 0
 system = 0
 conv = 0
-gc()
+if VERSION >= v"0.7.0-beta.0"
+    GC.gc()
+else
+    gc()
+end
+
