@@ -1,5 +1,5 @@
 module UDUnits
-import Base:+, -, *, / , ^, inv, log, log10, √, show, unsafe_convert
+import Base:+, -, *, / , ^, inv, log, log10, √, show, convert
 
 # package code goes here
 const depfile = joinpath(dirname(@__FILE__), "..", "deps", "deps.jl")
@@ -33,7 +33,7 @@ mutable struct System
     ptr :: Ptr{Nothing}
 end
 
-unsafe_convert(::Type{Ptr{Nothing}}, sys::System) = sys.ptr
+convert(::Type{Ptr{Nothing}}, sys::System) = sys.ptr
 _free_system(system::System) = ccall((:ut_free_system,libudunits2),Ptr{Nothing},(Ptr{Nothing},),system)
 
 """
@@ -67,7 +67,7 @@ mutable struct Unit
 end
 
 
-unsafe_convert(t::Type{Ptr{Nothing}}, unit::Unit) = unit.ptr
+convert(t::Type{Ptr{Nothing}}, unit::Unit) = unit.ptr
 
 _free_unit(unit::Unit) = ccall((:ut_free,libudunits2),Ptr{Nothing},(Ptr{Nothing},),unit)
 _ut_parse(system::System,unit::AbstractString) =
@@ -171,7 +171,7 @@ mutable struct Converter
     ptr :: Ptr{Nothing}
 end
 
-unsafe_convert(t::Type{Ptr{Nothing}}, conv::Converter) = conv.ptr
+convert(t::Type{Ptr{Nothing}}, conv::Converter) = conv.ptr
 _free_converter(converter::Converter) = ccall((:cv_free,libudunits2),Ptr{Nothing},(Ptr{Nothing},),converter)
 
 
