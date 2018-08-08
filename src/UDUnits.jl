@@ -9,7 +9,7 @@ else
     error("libudunits2 not properly installed. Please run Pkg.build(\"UDUnits\")")
 end
 
-if VERSION >= v"0.7.0-beta.0"
+if VERSION >= v"0.7.0"
     using Libdl
 else
     using Compat
@@ -161,7 +161,7 @@ root(unit::Unit,power::Integer) = Unit(ccall((:ut_root,libudunits2),Ptr{Nothing}
 √(unit::Unit) = root(unit,2)
 
 log(base::Number,unit::Unit) = Unit(ccall((:ut_log,libudunits2),Ptr{Nothing},(Float64,Ptr{Nothing}),base,unit))
-log(unit::Unit) = log(e,unit)
+log(unit::Unit) = log((VERSION >= v"0.7.0" ? ℯ : e),unit)
 log10(unit::Unit) = log(10,unit)
 
 
