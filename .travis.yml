@@ -6,6 +6,7 @@ os:
 julia:
   - 0.6
   - 0.7
+  - 1.0
   - nightly
 notifications:
   email: false
@@ -16,6 +17,7 @@ git:
 ## (tests will run but not make your overall status red)
 matrix:
   allow_failures:
+  - julia: 1.0
   - julia: nightly
 
 ## uncomment and modify the following lines to manually install system packages
@@ -31,9 +33,9 @@ addons:
 #  - julia -e 'Pkg.clone(pwd()); Pkg.build("UDUnits"); Pkg.test("UDUnits"; coverage=true)'
 after_success:
   # push coverage results to Coveralls
-  - julia -e 'cd(Pkg.dir("UDUnits")); Pkg.add("Coverage"); using Coverage; Coveralls.submit(Coveralls.process_folder())'
+  - julia -e 'VERSION >= v"0.7.0" && using Pkg; cd(Pkg.dir("UDUnits")); Pkg.add("Coverage"); using Coverage; Coveralls.submit(Coveralls.process_folder())'
   # push coverage results to Codecov
-  - julia -e 'cd(Pkg.dir("UDUnits")); Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())'
+  - julia -e 'VERSION >= v"0.7.0" && using Pkg; cd(Pkg.dir("UDUnits")); Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())'
   # push documentation to the github pages
-  - julia -e 'Pkg.add("Documenter")'
-  - julia -e 'cd(Pkg.dir("UDUnits")); include(joinpath("docs", "make.jl"))'
+  - julia -e 'VERSION >= v"0.7.0" && using Pkg; Pkg.add("Documenter")'
+  - julia -e 'VERSION >= v"0.7.0" && using Pkg; cd(Pkg.dir("UDUnits")); include(joinpath("docs", "make.jl"))'
