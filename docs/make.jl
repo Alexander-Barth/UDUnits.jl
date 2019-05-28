@@ -2,7 +2,7 @@ using Documenter
 using UDUnits
 
 makedocs(
-    format = :html,
+    format = Documenter.HTML(),
     modules = [UDUnits],
     sitename = "UDUnits",
     pages = [
@@ -14,9 +14,5 @@ makedocs(
 # for more information.
 
 deploydocs(
-    repo = "github.com/Alexander-Barth/UDUnits.jl.git",
-    target = "build",
-    julia  = "0.6",
-    deps = nothing,
-    make = nothing,
+    repo = "github.com/Alexander-Barth/UDUnits.jl.git"
 )
