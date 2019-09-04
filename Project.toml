@@ -1,6 +1,6 @@
 name = "UDUnits"
 uuid = "c1403bd2-e34a-5715-b454-1ca6f7e8d33a"
-keywords = ["units","netcdf","climate and forecast conventions"]
+keywords = ["units", "netcdf", "climate and forecast conventions"]
 license = "MIT"
 desc = "A Julia interface for UDUnits2 for units of physical quantities"
 version = "0.2.2"
@@ -13,4 +13,4 @@ Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [compat]
 BinDeps = "≥ 0.4.0"
-julia = "≥ 0.6.0"
+julia = "1"

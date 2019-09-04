@@ -9,13 +9,7 @@ else
     error("libudunits2 not properly installed. Please run Pkg.build(\"UDUnits\")")
 end
 
-if VERSION >= v"0.7.0"
-    using Libdl
-else
-    using Compat
-end
-
-
+using Libdl
 
 const UT_encoding_t = Cint
 const UT_UTF8 = 2
@@ -52,11 +46,7 @@ haskey(sys,"μm") # returns true
 """
 function System()
     sys = System(ccall((:ut_read_xml,libudunits2),Ptr{Nothing},(Ptr{Nothing},),C_NULL))
-    if VERSION >= v"0.7.0-beta.0"
-        finalizer(_free_system,sys)
-    else
-        finalizer(sys,_free_system)
-    end
+    finalizer(_free_system,sys)
     return sys
 end
 
@@ -80,11 +70,7 @@ function Unit(system::System,unit::AbstractString)
         error("UDUnits cannot parse $(unit)")
     end
     unit = Unit(ptr)
-    if VERSION >= v"0.7.0-beta.0"
-        finalizer(_free_unit,unit)
-    else
-        finalizer(unit,_free_unit)
-    end
+    finalizer(_free_unit,unit)
     return unit
 end
 
@@ -161,7 +147,7 @@ root(unit::Unit,power::Integer) = Unit(ccall((:ut_root,libudunits2),Ptr{Nothing}
 √(unit::Unit) = root(unit,2)
 
 log(base::Number,unit::Unit) = Unit(ccall((:ut_log,libudunits2),Ptr{Nothing},(Float64,Ptr{Nothing}),base,unit))
-log(unit::Unit) = log((VERSION >= v"0.7.0" ? ℯ : e),unit)
+log(unit::Unit) = log(ℯ,unit)
 log10(unit::Unit) = log(10,unit)
 
 
@@ -202,11 +188,7 @@ function Converter(from_unit::Unit,to_unit::Unit)
 
     converter = Converter(ptr)
 
-    if VERSION >= v"0.7.0-beta.0"
-        finalizer(_free_converter,converter)
-    else
-        finalizer(converter,_free_converter)
-    end
+    finalizer(_free_converter,converter)
     return converter
 end
 
