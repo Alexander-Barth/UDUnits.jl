@@ -2,7 +2,6 @@
 
 [![Build Status](https://travis-ci.org/Alexander-Barth/UDUnits.jl.svg?branch=master)](https://travis-ci.org/Alexander-Barth/UDUnits.jl)
 [![Coverage Status](https://coveralls.io/repos/Alexander-Barth/UDUnits.jl/badge.svg?branch=master&service=github)](https://coveralls.io/github/Alexander-Barth/UDUnits.jl?branch=master)
-[![codecov.io](http://codecov.io/github/Alexander-Barth/UDUnits.jl/coverage.svg?branch=master)](http://codecov.io/github/Alexander-Barth/UDUnits.jl?branch=master)
 
 <!-- udunits is currently not available for Windows in conda -->
 
@@ -19,6 +18,7 @@
 Inside the Julia shell, you can download and install the package by issuing:
 
 ```julia
+using Pkg
 Pkg.add("UDUnits")
 ```
 
@@ -27,7 +27,8 @@ Pkg.add("UDUnits")
 If you want to try the latest development version, you can do this with the following commands:
 
 ```julia
-Pkg.clone("https://github.com/Alexander-Barth/UDUnits.jl")
+using Pkg
+Pkg.add(PackageSpec(url="https://github.com/Alexander-Barth/UDUnits.jl", rev="master"))
 Pkg.build("UDUnits")
 ```
 
