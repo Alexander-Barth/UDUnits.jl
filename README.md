@@ -118,7 +118,7 @@ ENV["UDUNITS2_XML_PATH"] = joinpath(Pkg.dir("UDUnits"),"deps","udunits2.xml")
 
 ## Alternatives
 
-* [UDUnits.jl](https://github.com/PainterQubits/Unitful.jl)
+* [Unitful.jl](https://github.com/PainterQubits/Unitful.jl)
 
 ## Resources
 
