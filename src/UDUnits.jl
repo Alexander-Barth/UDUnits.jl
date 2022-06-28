@@ -1,14 +1,6 @@
 module UDUnits
 import Base:+, -, *, / , ^, inv, log, log10, √, show, cconvert
-
-# package code goes here
-const depfile = joinpath(dirname(@__FILE__), "..", "deps", "deps.jl")
-if isfile(depfile)
-    include(depfile)
-else
-    error("libudunits2 not properly installed. Please run Pkg.build(\"UDUnits\")")
-end
-
+using UDUNITS_jll
 using Libdl
 
 const UT_encoding_t = Cint
