@@ -94,28 +94,6 @@ speed_in_m_per_s = [100.,110.,120.]
 speed_in_km_per_h = conv.(speed_in_m_per_s)
 ```
 
-## Windows
-
-I did not succeed to install `UDUnits.jl` on Windows using the package manager Conda.
-One way to make it work on Windows is to bypass Conda:
-
-* extract `udunits2.dll` and all xml files from https://anaconda.org/conda-forge/udunits2/2.2.23/download/win-64/udunits2-2.2.23-vc9_1.tar.bz2
-* expat.dll from https://anaconda.org/conda-forge/expat/2.1.0/download/win-64/expat-2.1.0-vc9_1.tar.bz2
-* place all these files in the `deps` folder of `UDUnits` (i.e. the output of `joinpath(Pkg.dir("UDUnits"),"deps")`)
-
-* run
-
-```julia
-Pkg.build("UDUnits")
-```
-
-* before any call to `using UDUnits` or `import UDUnits`, set the following variable:
-
-```julia
-ENV["UDUNITS2_XML_PATH"] = joinpath(Pkg.dir("UDUnits"),"deps","udunits2.xml")
-```
-
-
 ## Alternatives
 
 * [Unitful.jl](https://github.com/PainterQubits/Unitful.jl)
