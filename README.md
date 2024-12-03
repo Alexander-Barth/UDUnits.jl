@@ -2,7 +2,7 @@
 
 
 [![Build Status](https://github.com/Alexander-Barth/UDUnits.jl/workflows/CI/badge.svg)](https://github.com/Alexander-Barth/UDUnits.jl/actions)
-[![codecov.io](http://codecov.io/github/Alexander-Barth/UDUnits.jl/coverage.svg?branch=master)](http://codecov.io/github/Alexander-Barth/UDUnits.jl?branch=master)
+[![codecov](https://codecov.io/github/Alexander-Barth/UDUnits.jl/graph/badge.svg?token=PVLTWRRfsj)](https://codecov.io/github/Alexander-Barth/UDUnits.jl)
 [![documentation stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://alexander-barth.github.io/UDUnits.jl/stable/)
 [![documentation dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://alexander-barth.github.io/UDUnits.jl/dev/)
 
